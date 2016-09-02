@@ -12,7 +12,7 @@ func GoTo(goURL string) string {
 	return body
 }
 
-//writes the response from GoTO to a file that was declared in CreateDownload
+//writes the response from GoTO to a file (download_out)
 func SaveIt(bodyresponse string, download_out string) {
 	//convert to bytes or ioutil complains
 	byteit := []byte(bodyresponse)
