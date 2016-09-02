@@ -12,11 +12,6 @@ func GoTo(goURL string) string {
 	return body
 }
 
-// takes in the output filename
-func CreateDownload(filepath string) string {
-	return filepath
-}
-
 //writes the response from GoTO to a file that was declared in CreateDownload
 func SaveIt(bodyresponse string, download_out string) {
 	//convert to bytes or ioutil complains
