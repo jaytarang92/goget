@@ -2,6 +2,7 @@ package gogetter
 
 import (
 	"crypto/md5"
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -16,21 +17,31 @@ func GoTo(goURL string) string {
 	return body
 }
 
-//HashCheck checks hashes
-func HashCheck(bodyresponse string, checksum string) string {
-	byteit := []byte(bodyresponse)
-	if len(checksum) != 0 {
-		//assign to hash to output as string
+//returns hash as string
+func Hash2str(bodyresponse string, checksum string, checktype string) string {
+	var strhash string
+	switch checktype {
+	case "md5":
+		byteit := []byte(bodyresponse)
 		hash := md5.Sum(byteit)
-		strhash := fmt.Sprintf("%x", hash)
-		//compare md5
-		if checksum == strhash {
-			fmt.Printf("\tChecksums Match!\n\tHash:\t%s", checksum)
-		} else {
-			fmt.Printf("\tChecksums don't match exiting!\n")
-			fmt.Printf("\tPassed:\t%s\n\tActual:\t%x\n", checksum, hash)
-			os.Exit(1)
-		}
+		sthash := fmt.Sprintf("%x", hash)
+		strhash = sthash
+	case "sha256":
+		byteit := []byte(bodyresponse)
+		hash := sha256.Sum256(byteit)
+		sthash := fmt.Sprintf("%x", hash)
+		strhash = sthash
+	}
+	return strhash
+}
+func HashCheck(bodyresponse string, checksum string, strhash string) string {
+	//compare md5
+	if checksum == strhash {
+		fmt.Printf("\tChecksums Match!\n\tHash:\t%s", checksum)
+	} else {
+		fmt.Printf("\tChecksums don't match exiting!\n")
+		fmt.Printf("\tPassed:\t%s\n\tActual:\t%x\n", checksum, strhash)
+		os.Exit(1)
 	}
 	return bodyresponse
 }
