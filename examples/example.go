@@ -1,34 +1,20 @@
 package main
 
 import (
-	"os"
+	"flag"
 
 	"github.com/jaytarang92/goget"
 )
 
-//struct for the arguments
-type ArgVals struct {
-	url          string
-	download_out string
-}
-
-var info ArgVals
+// gogetter -url=http://google.com -dst=/Users/J_Hack92/Desktop/index.html -md5sum=true
 
 func main() {
-	info.url = os.Args[1]
-	info.download_out = os.Args[2]
-	example2()
-}
+	// arguments accepted
+	md5Check := flag.Bool("md5sum", false, "Set to true if want to display md5")
+	url := flag.String("url", "", "url to file")
+	dest := flag.String("dst", "", "the output filename")
+	flag.Parse()
 
-func example1() {
-	//Download source/target
-	download_source := gogetter.GoTo(info.url)
-	// save the target
-	gogetter.SaveIt(download_source, info.download_out)
-}
-
-//This is a oneliner :) after the arguments are passed in
-func example2() {
-	//Call func SaveIt with GoTo as a Argument
-	gogetter.SaveIt(gogetter.GoTo(info.url), info.download_out)
+	//run gogetter to save the file
+	gogetter.SaveIt(gogetter.GoTo(*url), *dest, *md5Check)
 }
