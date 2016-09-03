@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 
 	"github.com/jaytarang92/goget"
 )
@@ -14,7 +15,12 @@ func main() {
 	url := flag.String("url", "", "url to file")
 	dest := flag.String("dst", "", "the output filename")
 	flag.Parse()
-
-	//run gogetter to save the file
-	gogetter.SaveIt(gogetter.GoTo(*url), *dest, *md5Check)
+	//Sprintf formats md5 check t string
+	if fmt.Sprintf("%s", *md5Check) == "" {
+		////run gogetter to save the file no hash check
+		gogetter.SaveIt(gogetter.GoTo(*url), *dest)
+	} else {
+		//run gogetter to save the file with hash check
+		gogetter.SaveIt(gogetter.HashCheck(gogetter.GoTo(*url), *md5Check), *dest)
+	}
 }
