@@ -27,6 +27,7 @@ func Hash2str(bodyresponse string, checksum string, checktype string) string {
 		sthash := fmt.Sprintf("%x", hash)
 		strhash = sthash
 	case "sha256":
+		fmt.Printf("\tCase sha256\n")
 		byteit := []byte(bodyresponse)
 		hash := sha256.Sum256(byteit)
 		sthash := fmt.Sprintf("%x", hash)
