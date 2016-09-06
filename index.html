@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Goget by jaytarang92</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Goget</h1>
+        <h2>Goget anything with verification!</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/jaytarang92/goget/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/jaytarang92/goget/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/jaytarang92/goget" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="goget" class="anchor" href="#goget" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Goget</h1>
+
+<p>Goget lets you download files from the internet with checksum verification for md5 and sha256.</p>
+
+<p>If md5/sha256 don't match it will not save it to local drive. It does the verifcation before placing it in local storage.</p>
+
+<p>I will be adding more crpyto support. :)</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<div class="highlight highlight-source-go"><pre><span class="pl-k">package</span> main
+
+<span class="pl-c">/*</span>
+<span class="pl-c">    CURRENTLY USING THIS TO CREATE THE BINARY</span>
+<span class="pl-c">*/</span>
+
+<span class="pl-k">import</span> (
+    <span class="pl-s"><span class="pl-pds">"</span>flag<span class="pl-pds">"</span></span>
+    <span class="pl-s"><span class="pl-pds">"</span>fmt<span class="pl-pds">"</span></span>
+    <span class="pl-s"><span class="pl-pds">"</span>os<span class="pl-pds">"</span></span>
+
+    <span class="pl-s"><span class="pl-pds">"</span>github.com/jaytarang92/goget<span class="pl-pds">"</span></span>
+)
+
+<span class="pl-c">// gogetter -url=http://www.7-zip.org/a/7z1602-src.7z -dst=7zip.7z -md5=8523200928a577cd1747d8575c4ecacf</span>
+<span class="pl-c">// gogetter -url=https://storage.googleapis.com/golang/go1.7.src.tar.gz -dst=go.src.tar.gz -sha256=72680c16ba0891fcf2ccf46d0f809e4ecf47bbf889f5d884ccb54c5e9a17e1c0</span>
+
+<span class="pl-k">func</span> <span class="pl-en">main</span>() {
+    <span class="pl-c">// arguments accepted</span>
+    <span class="pl-smi">md5Check</span> <span class="pl-k">:=</span> flag.<span class="pl-c1">String</span>(<span class="pl-s"><span class="pl-pds">"</span>md5<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>If md5 is passed it will check it before saving file.<span class="pl-pds">"</span></span>)
+    <span class="pl-smi">sha256chk</span> <span class="pl-k">:=</span> flag.<span class="pl-c1">String</span>(<span class="pl-s"><span class="pl-pds">"</span>sha256<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Same as md5 but using sha256<span class="pl-pds">"</span></span>)
+    <span class="pl-smi">url</span> <span class="pl-k">:=</span> flag.<span class="pl-c1">String</span>(<span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>url to file<span class="pl-pds">"</span></span>)
+    <span class="pl-smi">dest</span> <span class="pl-k">:=</span> flag.<span class="pl-c1">String</span>(<span class="pl-s"><span class="pl-pds">"</span>dst<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>the output filename<span class="pl-pds">"</span></span>)
+    flag.<span class="pl-c1">Parse</span>()
+
+    <span class="pl-c">// make variables for future use</span>
+    <span class="pl-k">var</span> <span class="pl-smi">hash</span> <span class="pl-k">string</span>
+    <span class="pl-k">var</span> <span class="pl-smi">hashtype</span> <span class="pl-k">string</span>
+
+    <span class="pl-c">// if md5 and sha256 are passed then exit</span>
+    <span class="pl-k">if</span> fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *md5Check) != <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> &amp;&amp; fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *sha256chk) != <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> {
+        fmt.<span class="pl-c1">Println</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Please choose 1. Either sha256 or md5.<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>)
+        os.<span class="pl-c1">Exit</span>(<span class="pl-c1">1</span>)
+    }
+
+    <span class="pl-c">//Sprintf formats %x to a %s</span>
+    <span class="pl-k">if</span> fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *md5Check) == <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> &amp;&amp; fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *sha256chk) == <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> {
+        <span class="pl-c">//just downloads</span>
+        gogetter.<span class="pl-c1">SaveIt</span>(gogetter.<span class="pl-c1">GoTo</span>(*url), *dest)
+    } <span class="pl-k">else</span> {
+        <span class="pl-c">//checks the hash passed and runs gogetter</span>
+        <span class="pl-k">if</span> fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *md5Check) != <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> {
+            hash = fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *md5Check)
+            hashtype = <span class="pl-s"><span class="pl-pds">"</span>md5<span class="pl-pds">"</span></span>
+            <span class="pl-k">if</span> <span class="pl-c1">len</span>(hash) != <span class="pl-c1">32</span> {
+                fmt.<span class="pl-c1">Println</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Please pass a valid md5 value!<span class="pl-pds">"</span></span>)
+                os.<span class="pl-c1">Exit</span>(<span class="pl-c1">1</span>)
+            }
+        } <span class="pl-k">else</span> <span class="pl-k">if</span> fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *sha256chk) != <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> {
+            hash = fmt.<span class="pl-c1">Sprintf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%s</span><span class="pl-pds">"</span></span>, *sha256chk)
+            hashtype = <span class="pl-s"><span class="pl-pds">"</span>sha256<span class="pl-pds">"</span></span>
+            <span class="pl-k">if</span> <span class="pl-c1">len</span>(hash) != <span class="pl-c1">64</span> {
+                fmt.<span class="pl-c1">Println</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Please pass a valid sha256 value!<span class="pl-pds">"</span></span>)
+                os.<span class="pl-c1">Exit</span>(<span class="pl-c1">1</span>)
+            }
+        }
+        <span class="pl-smi">input</span> <span class="pl-k">:=</span> gogetter.<span class="pl-c1">GoTo</span>(*url)
+        gogetter.<span class="pl-c1">SaveIt</span>(gogetter.<span class="pl-c1">HashCheck</span>(input, hash, gogetter.<span class="pl-c1">Hash2str</span>(input, hash, hashtype)), *dest)
+    }
+}</pre></div>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
