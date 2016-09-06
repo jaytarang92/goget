@@ -6,6 +6,8 @@ If md5/sha256 don't match it will not save it to local drive. It does the verifc
 
 I will be adding more crpyto support. :)
 
+**Think wget but cross platform w/ verification
+
 ##Example
 ```go
 package main
