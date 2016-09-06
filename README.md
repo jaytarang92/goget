@@ -12,10 +12,6 @@ I will be adding more crpyto support. :)
 ```go
 package main
 
-/*
-	CURRENTLY USING THIS TO CREATE THE BINARY
-*/
-
 import (
 	"flag"
 	"fmt"
@@ -26,7 +22,6 @@ import (
 
 // gogetter -url=http://www.7-zip.org/a/7z1602-src.7z -dst=7zip.7z -md5=8523200928a577cd1747d8575c4ecacf
 // gogetter -url=https://storage.googleapis.com/golang/go1.7.src.tar.gz -dst=go.src.tar.gz -sha256=72680c16ba0891fcf2ccf46d0f809e4ecf47bbf889f5d884ccb54c5e9a17e1c0
-
 func main() {
 	// arguments accepted
 	md5Check := flag.String("md5", "", "If md5 is passed it will check it before saving file.")
@@ -34,17 +29,21 @@ func main() {
 	url := flag.String("url", "", "url to file")
 	dest := flag.String("dst", "", "the output filename")
 	flag.Parse()
-	
 	// make variables for future use
 	var hash string
 	var hashtype string
-	
+
+	if *url == "" || *dest == "" {
+		fmt.Println("  Insufficient amount of arguments! Please check if dst and url were passed!")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 	// if md5 and sha256 are passed then exit
 	if fmt.Sprintf("%s", *md5Check) != "" && fmt.Sprintf("%s", *sha256chk) != "" {
 		fmt.Println("\tPlease choose 1. Either sha256 or md5.\n")
 		os.Exit(1)
 	}
-	
 	//Sprintf formats %x to a %s
 	if fmt.Sprintf("%s", *md5Check) == "" && fmt.Sprintf("%s", *sha256chk) == "" {
 		//just downloads
