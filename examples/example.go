@@ -58,6 +58,12 @@ func main() {
 	arg.dst = *dest
 	arg.md5 = *md5Check
 	arg.sha256 = *sha256chk
+
+	if arg.url == "" || arg.dst == "" {
+		fmt.Println("  Insufficient number of arguments passed! Please check if dst and url were passed!")
+		flag.PrintDefaults()
+	}
+
 	// use Sprintf to format to %x to a %s
 	//if both md5 and sha256 are not empty print message
 	if fmt.Sprintf("%s", arg.md5) != "" && fmt.Sprintf("%s", arg.sha256) != "" {

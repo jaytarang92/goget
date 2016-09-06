@@ -48,6 +48,13 @@ func main() {
 	// make variables for future use
 	var hash string
 	var hashtype string
+
+	if *url == "" || *dest == "" {
+		fmt.Println("  Insufficient amount of arguments! Please check if dst and url were passed!")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 	// if md5 and sha256 are passed then exit
 	if fmt.Sprintf("%s", *md5Check) != "" && fmt.Sprintf("%s", *sha256chk) != "" {
 		fmt.Println("\tPlease choose 1. Either sha256 or md5.\n")
