@@ -1,7 +1,11 @@
 # goget
 
+goget lets you download files from the internet with checksum verification for md5 and sha256.
+If md5/sha256 don't match it will not save it to local drive. It does the verifcation before placing it in local storage.
+I will be adding more crpyto support. 
+
 ##Example
-```
+```go
 package main
 
 /*
