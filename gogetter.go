@@ -26,17 +26,28 @@ func Hash2str(bodyresponse string, checksum string, checktype string) string {
 		hash := md5.Sum(byteit)
 		sthash := fmt.Sprintf("%x", hash)
 		strhash = sthash
+		/* ADDED TO MAIN FOR FASTER RESPONSE | BEFORE STARTING DOWNLOAD
+		if len(strhash) != 32 {
+			fmt.Println("\tA valid md5 was not passed please try again!")
+			os.Exit(1)
+		}*/
 	case "sha256":
 		fmt.Printf("\tCase sha256\n")
 		byteit := []byte(bodyresponse)
 		hash := sha256.Sum256(byteit)
 		sthash := fmt.Sprintf("%x", hash)
 		strhash = sthash
+		/* ADDED TO MAIN FOR FASTER RESPONSE | BEFORE STARTING DOWNLOAD
+		if len(strhash) != 64 {
+			fmt.Println("\tA valid sha256 was not passed please try again!")
+			os.Exit(1)
+		}
+		*/
 	}
 	return strhash
 }
 func HashCheck(bodyresponse string, checksum string, strhash string) string {
-	//compare md5
+	//compare file hash vs argument passed in
 	if checksum == strhash {
 		fmt.Printf("\tChecksums Match!\n\tHash:\t%s", checksum)
 	} else {
