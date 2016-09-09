@@ -39,15 +39,20 @@ type cmdline struct {
 	dst    string
 	md5    string
 	sha256 string
+	proxy  string
 }
 
 // makes the cmdline arguments in scope
 var arg cmdline
 
+//define pproxy for printing
+var pproxy string
+
 // gogetter -url=http://www.7-zip.org/a/7z1602-src.7z -dst=7zip.7z -md5=8523200928a577cd1747d8575c4ecacf
 // gogetter -url=https://storage.googleapis.com/golang/go1.7.src.tar.gz -dst=go.src.tar.gz -sha256=72680c16ba0891fcf2ccf46d0f809e4ecf47bbf889f5d884ccb54c5e9a17e1c0
 func main() {
 	// arguments accepted
+	proxy := flag.String("proxy", "", "Proxy i.e http://company.proxy.com:8080")
 	md5Check := flag.String("md5", "", "If md5 is passed it will check it before saving file.")
 	sha256chk := flag.String("sha256", "", "Same a md5 but using sha256")
 	url := flag.String("url", "", "url to file")
@@ -58,6 +63,7 @@ func main() {
 	arg.dst = *dest
 	arg.md5 = *md5Check
 	arg.sha256 = *sha256chk
+	arg.proxy = *proxy
 
 	if arg.url == "" || arg.dst == "" {
 		fmt.Println("  Insufficient number of arguments passed! Please check if dst and url were passed!")
@@ -67,9 +73,17 @@ func main() {
 	// use Sprintf to format to %x to a %s
 	//if both md5 and sha256 are not empty print message
 	if fmt.Sprintf("%s", arg.md5) != "" && fmt.Sprintf("%s", arg.sha256) != "" {
-		fmt.Println("\tPlesae choose 1. Either sha256 or md5.\n")
+		fmt.Println("\tPlesae choose 1. Either sha256 or md5.")
 		os.Exit(1)
 	}
+
+	//if no proxy is defined then bypass it
+	if arg.proxy == "" {
+		pproxy = "proxy is undefined"
+	} else {
+		pproxy = arg.proxy
+	}
+
 	//if md5 is not empty
 	if arg.md5 != "" {
 		if len(arg.md5) != 32 {
@@ -92,19 +106,19 @@ func main() {
 
 // just downloads it
 func none() {
-	gogetter.SaveIt(gogetter.GoTo(arg.url), arg.dst)
+	gogetter.SaveIt(gogetter.GoTo(arg.url, pproxy), arg.dst)
 }
 
 // needs a md5sum to be passed for verification
 func md5only() {
 	hash := fmt.Sprintf("%s", arg.md5)
-	input := gogetter.GoTo(arg.url)
+	input := gogetter.GoTo(arg.url, pproxy)
 	gogetter.SaveIt(gogetter.HashCheck(input, hash, gogetter.Hash2str(input, hash, "md5")), arg.dst)
 }
 
 // needs a sha256 passed for verification
 func sha256only() {
 	hash := fmt.Sprintf("%s", arg.sha256)
-	input := gogetter.GoTo(arg.url)
+	input := gogetter.GoTo(arg.url, pproxy)
 	gogetter.SaveIt(gogetter.HashCheck(input, hash, gogetter.Hash2str(input, hash, "sha256")), arg.dst)
 }

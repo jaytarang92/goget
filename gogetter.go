@@ -35,13 +35,17 @@ import (
 )
 
 //GoTo gorequest to open url and get the response and return it
-func GoTo(goURL string) string {
+//proxyTunnel is just a proxy url being passed in
+func GoTo(goURL string, proxyTunnel string) string {
 	fmt.Println("\tReading input...")
-	_, body, _ := gorequest.New().Get(goURL).End()
+	_, body, _ := gorequest.New().
+		Proxy(proxyTunnel).
+		Get(goURL).
+		End()
 	return body
 }
 
-//returns hash as string
+//Hash2str eturns hash as string
 func Hash2str(bodyresponse string, checksum string, checktype string) string {
 	var strhash string
 	switch checktype {
