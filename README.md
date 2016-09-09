@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/jaytarang92/goget?status.svg)](https://godoc.org/github.com/jaytarang92/goget)
+
 # goget
 
 goget lets you download files from the internet with checksum verification for md5 and sha256.
